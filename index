@@ -1,1 +1,760 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>托育人員自我檢核挑戰｜不適切照護防範測驗</title>
+  <style>
+    :root {
+      --primary: #4f772d;
+      --primary-light: #90a955;
+      --primary-bg: #f4f7f0;
+      --accent: #e07a5f;
+      --text-main: #2b2d42;
+      --text-muted: #5c6274;
+      --card-bg: #ffffff;
+      --correct: #2a9d8f;
+      --correct-bg: #e8f6f4;
+      --wrong: #e63946;
+      --wrong-bg: #fdebec;
+      --border: #dfe4ea;
+      --shadow: 0 8px 24px rgba(43, 45, 66, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f4f7f0 0%, #e9f0e2 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 720px;
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 1px solid rgba(79, 119, 45, 0.15);
+    }
+
+    .header {
+      background: var(--primary);
+      color: #fff;
+      padding: 22px 28px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .header p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      margin-top: 4px;
+    }
+
+    .content {
+      padding: 28px;
+    }
+
+    /* Start Screen */
+    .intro-box {
+      background: var(--primary-bg);
+      border-left: 5px solid var(--primary);
+      padding: 18px 20px;
+      border-radius: 10px;
+      margin-bottom: 22px;
+    }
+
+    .intro-box h3 {
+      color: var(--primary);
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0 22px;
+    }
+
+    .tag {
+      background: #edf2e6;
+      color: var(--primary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 999px;
+    }
+
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 14px 20px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      background: var(--primary);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .btn:hover {
+      background: #3d5e22;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--accent);
+      margin-top: 10px;
+    }
+
+    .btn-secondary:hover {
+      background: #c9664b;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+      margin-top: 10px;
+    }
+
+    .btn-outline:hover {
+      background: var(--primary-bg);
+    }
+
+    /* Quiz Screen */
+    .progress-wrap {
+      margin-bottom: 20px;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: #e9ecef;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary-light);
+      width: 0%;
+      transition: width 0.35s ease;
+    }
+
+    .category-badge {
+      display: inline-block;
+      background: #fff3e6;
+      color: #d96b27;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    .question-text {
+      font-size: 1.18rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--text-main);
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      padding: 15px 18px;
+      font-size: 1rem;
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      color: var(--text-main);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary-light);
+      background: var(--primary-bg);
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    .option-prefix {
+      font-weight: 700;
+      color: var(--primary);
+      min-width: 24px;
+    }
+
+    .option-btn.correct {
+      border-color: var(--correct);
+      background: var(--correct-bg);
+      color: #165b53;
+      font-weight: 600;
+    }
+
+    .option-btn.wrong {
+      border-color: var(--wrong);
+      background: var(--wrong-bg);
+      color: #9b1c26;
+    }
+
+    .explanation {
+      margin-top: 20px;
+      padding: 16px 18px;
+      border-radius: 12px;
+      background: #f8f9fa;
+      border-left: 5px solid var(--primary);
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .explanation.show {
+      display: block;
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .explanation p {
+      font-size: 0.95rem;
+      color: #3a3f51;
+    }
+
+    .next-wrap {
+      margin-top: 20px;
+      display: none;
+    }
+
+    .next-wrap.show {
+      display: block;
+    }
+
+    /* Result Screen */
+    .score-circle {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: var(--primary-bg);
+      border: 6px solid var(--primary);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 10px auto 20px;
+    }
+
+    .score-num {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.1;
+    }
+
+    .score-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .result-title {
+      text-align: center;
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .result-desc {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+    }
+
+    .review-list {
+      margin-top: 22px;
+      border-top: 1px solid var(--border);
+      padding-top: 18px;
+    }
+
+    .review-item {
+      background: #fff8f8;
+      border: 1px solid #f5c2c7;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 12px;
+      font-size: 0.92rem;
+    }
+
+    .review-item strong {
+      color: var(--wrong);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 520px) {
+      .content { padding: 20px; }
+      .header h1 { font-size: 1.25rem; }
+      .question-text { font-size: 1.08rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🛡️ 托育不適切照護自我檢核測驗</h1>
+      <p>守護嬰幼兒安全｜從日常動作、言語與態度做起</p>
+    </div>
+
+    <!-- 開始畫面 -->
+    <div id="start-screen" class="content">
+      <div class="intro-box">
+        <h3>核心自我檢核三問</h3>
+        <p>在托育過程中，判斷是否為「不適切照護」，不以事後有沒有受傷作為唯一依據，只要屬於高風險行為就必須立即修正：</p>
+        <p style="margin-top: 8px; font-weight: 700; color: #2b2d42;">
+          1. 是否符合嬰幼兒的發展需求？<br>
+          2. 是否尊重孩子的身體與情緒？<br>
+          3. 是否安全？
+        </p>
+      </div>
+
+      <p style="font-size: 0.95rem; color: var(--text-muted);">本測驗共 <strong>15 題</strong>，涵蓋簡報前半部核心主題：</p>
+      <div class="tag-list">
+        <span class="tag">粗魯動作與替代方式</span>
+        <span class="tag">安全餵食四原則</span>
+        <span class="tag">限制行動風險</span>
+        <span class="tag">主動照顧四到原則</span>
+        <span class="tag">正向引導取代處罰</span>
+        <span class="tag">支持性言語與表情</span>
+        <span class="tag">真實判例警示</span>
+      </div>
+
+      <button class="btn" onclick="startQuiz(false)">開始自我檢核挑戰</button>
+    </div>
+
+    <!-- 測驗畫面 -->
+    <div id="quiz-screen" class="content hidden">
+      <div class="progress-wrap">
+        <div class="progress-info">
+          <span id="progress-text">第 1 / 15 題</span>
+          <span id="score-live">目前得分：0</span>
+        </div>
+        <div class="progress-bar">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+      </div>
+
+      <span id="q-category" class="category-badge">分類</span>
+      <div id="q-text" class="question-text">題目載入中...</div>
+      <div id="options-container" class="options"></div>
+
+      <div id="explanation-box" class="explanation">
+        <div id="exp-title" class="explanation-title">解析</div>
+        <p id="exp-text"></p>
+      </div>
+
+      <div id="next-wrap" class="next-wrap">
+        <button id="next-btn" class="btn" onclick="nextQuestion()">下一題 ➔</button>
+      </div>
+    </div>
+
+    <!-- 結果畫面 -->
+    <div id="result-screen" class="content hidden">
+      <div class="score-circle">
+        <div id="final-score" class="score-num">100</div>
+        <div class="score-label">總分 (滿分100)</div>
+      </div>
+      <div id="result-title" class="result-title">太棒了！</div>
+      <div id="result-desc" class="result-desc"></div>
+
+      <button class="btn" onclick="startQuiz(false)">🔄 重新全部測驗</button>
+      <button id="retry-wrong-btn" class="btn btn-secondary hidden" onclick="startQuiz(true)">🎯 只重練答錯的題目</button>
+
+      <div id="review-section" class="review-list hidden">
+        <h3 style="font-size: 1.05rem; margin-bottom: 12px;">📌 錯題重點回顧</h3>
+        <div id="review-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const fullQuestions = [
+      {
+        category: "核心定義與判斷標準",
+        question: "關於「不適切照護」的判斷標準，下列哪一項觀念最正確？",
+        options: [
+          "只要幼兒事後身體沒有出現瘀青或外傷，就不算不適切照護",
+          "只要照顧方式本身屬於高風險，即使未造成明顯外傷，也屬不適切照護並需立即修正",
+          "只有保母『故意』想傷害孩子才算違法，一時疏忽或好意壓制不算",
+          "只要家長口頭同意，就可以使用較嚴厲的身體限制方式"
+        ],
+        answer: 1,
+        explanation: "判斷標準不只是「有沒有受傷」！只要照顧方式本身屬高風險（如搖晃、壓制、忽略哭泣等），就需要立即修正；且在法律上「業務過失／過失傷害」同樣需負刑責，並非只有故意才構成犯罪。"
+      },
+      {
+        category: "（一）粗魯動作與替代方式",
+        question: "當托育人員感到心急、挫折或情緒快要失控時，最安全且正確的做法是什麼？",
+        options: [
+          "抱著嬰兒快步走動並用力搖晃，希望能趕快安撫情緒",
+          "一邊抱著孩子一邊深呼吸，撐到孩子睡著為止",
+          "先將嬰幼兒放在安全的地墊或床欄內，暫時離開視線可及處深呼吸調整情緒或尋求支援",
+          "把毛巾或玩偶丟向孩子旁邊，轉移他的注意力"
+        ],
+        answer: 2,
+        explanation: "情緒升高時，應先將孩子放到安全位置（地墊或床欄內），再調整自己的情緒或呼叫支援，絕不在情緒失控時抱持嬰兒，避免發生嬰兒搖晃症候群等重傷害。"
+      },
+      {
+        category: "（一）粗魯動作與替代方式",
+        question: "抱起嬰幼兒時，為了讓孩子有預期感並保護其頭頸與關節，應遵循哪三個動作原則？",
+        options: [
+          "快、狠、準",
+          "慢、穩、貼",
+          "拉、提、抱",
+          "推、扶、轉"
+        ],
+        answer: 1,
+        explanation: "抱起動作要「慢、穩、貼」：先穩住頭頸、貼近身體，動作慢且連續；避免突然拉扯手臂或衣領，讓孩子有預期感。"
+      },
+      {
+        category: "真實案例警示｜過失責任",
+        question: "在真實司法判例中，有保母為了幫鼻塞不適的幼兒按摩鼻子，因幼兒掙扎而「用手壓制幼兒大腿」，導致雙腿瘀傷。法院最終如何認定？",
+        options: [
+          "因為出發點是為了幫孩子按摩，屬於正當照護行為，判無罪",
+          "雖無傷害故意，但疏未注意施力與安全安撫方式，仍構成「業務過失傷害罪」",
+          "只要有保母技術士證即可免除過失責任",
+          "僅需口頭向家長道歉，不涉及任何刑事責任"
+        ],
+        answer: 1,
+        explanation: "即使出於「幫助孩子」的好意，身體壓制仍屬高風險動作。「過失」也有刑責，安撫幼兒應使用轉移注意、輕聲說話等方式，而非身體壓制。"
+      },
+      {
+        category: "（二）強迫進食",
+        question: "關於「安全餵食四原則」，下列哪一項做法是正確的？",
+        options: [
+          "為了讓孩子多吃一點，趁他仰躺時用湯匙快速餵食",
+          "孩子把食物吐出來或乾嘔時，堅持要求「不吃完就不能玩」並繼續餵完",
+          "讓孩子坐穩、頭頸中立，一口一口等吞嚥完成再餵下一口，不催促也不強迫",
+          "邊追著跑邊餵食，避免孩子坐不住影響進食量"
+        ],
+        answer: 2,
+        explanation: "安全餵食四原則為：姿勢（坐穩、頭頸中立，避免躺餵與追著餵）、速度（一口一口等吞嚥完成）、觀察（咳嗽、臉色與呼吸）、尊重（以提供、等待、鼓勵取代命令硬塞）。"
+      },
+      {
+        category: "（三）限制行動",
+        question: "關於幫寶椅、餵食椅與遊戲圍欄的使用原則，下列何者正確？",
+        options: [
+          "為了方便做家事，可將嬰幼兒長時間固定在幫寶椅上看電視",
+          "座椅是「用途限定」工具；圍欄是「短時安全」工具，不能當作長期關住孩子的地方",
+          "睡覺時用棉被蓋住嬰兒眼口鼻，可以增加包覆感與安全感",
+          "嬰兒哭鬧不睡時，可用手按住身體不讓他翻身直到睡著"
+        ],
+        answer: 1,
+        explanation: "非餵食或睡眠時長時間固定於座椅會影響大肌肉發展，隔離則會降低互動與語言刺激。座椅應「用途限定」，圍欄僅作為「短時安全」防護工具。"
+      },
+      {
+        category: "真實案例警示｜包巾與抬頭練習",
+        question: "依據真實判例與照護規範，為嬰兒使用包巾時，鬆緊度應以什麼為原則？",
+        options: [
+          "越緊越好，才能防止嬰兒驚嚇反射",
+          "以「能插入兩指」為原則，並全程觀察臉色、呼吸與肢體活動",
+          "只要包住頭部與雙手，讓嬰兒完全無法動彈即可",
+          "包好後即可放心離開房間處理其他事務"
+        ],
+        answer: 1,
+        explanation: "包巾過緊曾造成嬰兒雙手擦挫傷判例。包巾鬆緊應以「能插入兩指」為原則，避免過緊壓迫肢體，且練習抬頭必須在無尖角粗硬物的軟質地墊上全程守視。"
+      },
+      {
+        category: "（四）忽略照顧",
+        question: "主動照顧強調「四到原則」（看得到、聽得到、摸得到、做得到），其中「摸得到」主要是指什麼？",
+        options: [
+          "隨時把孩子抱在懷裡不放下來",
+          "嬰兒睡眠時，定時觸摸胸腹確認呼吸起伏與體溫",
+          "吃飯時用手測試食物溫度",
+          "每天幫幼兒全身按摩檢查是否有外傷"
+        ],
+        answer: 1,
+        explanation: "主動照顧四到原則：看得到（視線覆蓋各區）、聽得到（辨識哭聲、咳嗽、突然安靜）、摸得到（嬰兒睡眠時定時觸摸胸腹確認呼吸與溫度）、做得到（環境整理與收納預防）。"
+      },
+      {
+        category: "真實案例警示｜餵奶後與離開視線",
+        question: "餵奶後拍嗝與觀察的正確守則為何？",
+        options: [
+          "餵完奶直接讓嬰兒趴睡，即可離開房間照顧其他幼兒",
+          "餵奶後至少拍嗝 15 分鐘，放下後採仰臥（或依醫囑側臥），並在視線範圍內持續觀察至少 30 分鐘",
+          "只要嬰兒沒有哭出聲音，就代表很安全不需要進房查看",
+          "上廁所只要不超過 10 分鐘，可以直接把幼兒留在開放客廳"
+        ],
+        answer: 1,
+        explanation: "真實判例顯示，餵奶後未持續觀察並長時間離開房間，可能導致嗆奶窒息死亡。餵奶後應至少拍嗝 15 分鐘，放下後在視線內持續觀察至少 30 分鐘；短暫離開（如如廁）也必須先將幼兒置於安全圍欄或交由另一成人看護。"
+      },
+      {
+        category: "（五）不當處罰",
+        question: "下列哪一種行為雖然「沒有實際打到孩子」，但仍屬於不當處罰中的「恐嚇類」並可能構成犯罪？",
+        options: [
+          "用簡短堅定的語氣說「手輕輕，不打人」",
+          "高舉手掌或拿起玩具球棒作勢要打人、以動作威嚇幼兒",
+          "暫時收起被幼兒拿來丟擲的積木",
+          "請幼兒坐下來平復情緒並陪伴在旁"
+        ],
+        answer: 1,
+        explanation: "「作勢要打、以動作威嚇」即使沒有實際接觸或打到幼兒，仍屬不當處罰中的恐嚇行為，會造成嚴重心理傷害並可能構成刑法恐嚇罪。"
+      },
+      {
+        category: "（五）不當處罰｜替代作法",
+        question: "當幼兒出現丟玩具的危險行為時，「正向引導」的正確順序與作法為何？",
+        options: [
+          "先大聲斥責 ➔ 罰站 10 分鐘 ➔ 要求說對不起",
+          "先確保安全（移走危險物） ➔ 用短句講清楚規則與替代行為 ➔ 給出兩個可行選擇",
+          "直接抓住孩子的手臂 ➔ 沒收所有玩具 ➔ 隔離在房間內",
+          "假裝沒看到，等孩子自己冷靜下來"
+        ],
+        answer: 1,
+        explanation: "正向引導步驟為：1. 先確保安全（先做再說） 2. 講清楚規則與替代行為（短句如「球丟桶子」） 3. 給出兩個可行選擇（讓孩子感受自主與尊重） 4. 合理且立即的行為後果。"
+      },
+      {
+        category: "真實案例警示｜托育人員資格",
+        question: "合格保母因家中臨時有事無法親自照顧收托幼兒時，可以怎麼處理？",
+        options: [
+          "請同住但未領有保母技術士證的配偶代為照顧半天",
+          "托育服務應由本人親自提供，不得轉委託不具資格之人，應依規定啟動備援或請家長接回",
+          "只要配偶平常有帶過小孩的經驗就可以代班",
+          "把幼兒交給鄰居暫時看管一下即可"
+        ],
+        answer: 1,
+        explanation: "真實判例中，合格保母將幼兒交由未領證配偶照顧，配偶因哭鬧毆打幼兒，結果配偶判傷害罪、保母本人亦被判過失傷害罪！托育服務必須親自提供，嚴禁轉委託不具資格之人。"
+      },
+      {
+        category: "真實案例警示｜重複危險行為",
+        question: "面對 1 歲多幼兒反覆攀爬樓梯、勸阻無效時，最根本且正確的應對方式是什麼？",
+        options: [
+          "輕拍大腿或手心，讓孩子記住痛就不敢再爬",
+          "大聲吼叫嚇阻，讓他產生恐懼感",
+          "加裝符合規格的樓梯安全柵欄進行物理阻隔，而非體罰",
+          "把幼兒綁在餐椅上避免他靠近樓梯"
+        ],
+        answer: 2,
+        explanation: "面對幼兒重複的探索與危險行為，正確做法是改善環境（如加裝樓梯柵欄、物理阻隔）。體罰無法教會孩子「為什麼危險」，只會讓孩子害怕並觸法。"
+      },
+      {
+        category: "（六）支持性言語",
+        question: "幼兒因為搶不到車子而大哭動手，下列哪一句話最符合「支持性語言（把制止變成教）」的原則？",
+        options: [
+          "「再哭我就叫爸爸媽媽不要來接你了！」",
+          "「你怎麼這麼愛哭又愛打人，真是愛哭鬼！」",
+          "「你現在很生氣，你想要那台車對嗎？手不打人，你可以說『輪到我』，或我幫你排隊。」",
+          "「不准哭！立刻把嘴巴閉起來！」"
+        ],
+        answer: 2,
+        explanation: "支持性語言五步驟：描述感受（「你現在很生氣」）➔ 描述需求（「你想要那台車」）➔ 給出規則（「手不打人」）➔ 提供替代（「你可以說輪到我」）➔ 肯定努力。"
+      },
+      {
+        category: "（七）不適當表情與非語言訊號",
+        question: "當照顧者嘴上說「沒關係、沒事」，但臉上卻露出瞪視、用力抿嘴或不耐煩的表情時，幼兒會如何接收這個訊息？",
+        options: [
+          "幼兒只聽得懂語言，不會察覺大人的臉部表情",
+          "幼兒會相信表情而非語言，解讀為「我不好／我會被討厭」，長期易形成焦慮依附",
+          "只要語氣平靜，表情兇一點有助於建立權威",
+          "1 歲以下的嬰兒視力尚未發育完全，看不到大人臉色"
+        ],
+        answer: 1,
+        explanation: "非語言訊號（瞪視、抿嘴、不耐煩眼神）同樣會傷人！當言語與表情不一致時，孩子只會相信臉部表情，唯有言語與表情一致，才能建立孩子的安全感。"
+      }
+    ];
+
+    let activeQuestions = [];
+    let currentIndex = 0;
+    let score = 0;
+    let wrongQuestions = [];
+
+    const startScreen = document.getElementById("start-screen");
+    const quizScreen = document.getElementById("quiz-screen");
+    const resultScreen = document.getElementById("result-screen");
+
+    function startQuiz(onlyWrong) {
+      if (onlyWrong && wrongQuestions.length > 0) {
+        activeQuestions = [...wrongQuestions];
+      } else {
+        activeQuestions = [...fullQuestions];
+      }
+      wrongQuestions = [];
+      currentIndex = 0;
+      score = 0;
+
+      startScreen.classList.add("hidden");
+      resultScreen.classList.add("hidden");
+      quizScreen.classList.remove("hidden");
+
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const q = activeQuestions[currentIndex];
+      const total = activeQuestions.length;
+
+      document.getElementById("progress-text").textContent = `第 ${currentIndex + 1} / ${total} 題`;
+      document.getElementById("score-live").textContent = `答對題數：${score}`;
+      document.getElementById("progress-fill").style.width = `${((currentIndex) / total) * 100}%`;
+
+      document.getElementById("q-category").textContent = q.category;
+      document.getElementById("q-text").textContent = q.question;
+
+      const optionsContainer = document.getElementById("options-container");
+      optionsContainer.innerHTML = "";
+
+      const prefixes = ["A", "B", "C", "D"];
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.innerHTML = `<span class="option-prefix">${prefixes[idx]}.</span><span>${opt}</span>`;
+        btn.onclick = () => handleAnswer(idx, btn);
+        optionsContainer.appendChild(btn);
+      });
+
+      const expBox = document.getElementById("explanation-box");
+      expBox.classList.remove("show");
+      document.getElementById("next-wrap").classList.remove("show");
+    }
+
+    function handleAnswer(selectedIndex, selectedBtn) {
+      const q = activeQuestions[currentIndex];
+      const optionBtns = document.querySelectorAll(".option-btn");
+
+      optionBtns.forEach(btn => btn.disabled = true);
+
+      const expTitle = document.getElementById("exp-title");
+      const expText = document.getElementById("exp-text");
+      const expBox = document.getElementById("explanation-box");
+
+      if (selectedIndex === q.answer) {
+        selectedBtn.classList.add("correct");
+        score++;
+        expTitle.textContent = "✅ 答對了！觀念非常正確";
+        expTitle.style.color = "#2a9d8f";
+      } else {
+        selectedBtn.classList.add("wrong");
+        optionBtns[q.answer].classList.add("correct");
+        wrongQuestions.push(q);
+        expTitle.textContent = "❌ 再留意一下喔！正確答案已標示";
+        expTitle.style.color = "#e63946";
+      }
+
+      document.getElementById("score-live").textContent = `答對題數：${score}`;
+      expText.textContent = q.explanation;
+      expBox.classList.add("show");
+
+      const nextBtn = document.getElementById("next-btn");
+      nextBtn.textContent = currentIndex === activeQuestions.length - 1 ? "查看測驗結果 🏁" : "下一題 ➔";
+      document.getElementById("next-wrap").classList.add("show");
+    }
+
+    function nextQuestion() {
+      currentIndex++;
+      if (currentIndex < activeQuestions.length) {
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      quizScreen.classList.add("hidden");
+      resultScreen.classList.remove("hidden");
+
+      const total = activeQuestions.length;
+      const finalPercentage = Math.round((score / total) * 100);
+      document.getElementById("final-score").textContent = finalPercentage;
+
+      const titleEl = document.getElementById("result-title");
+      const descEl = document.getElementById("result-desc");
+
+      if (finalPercentage === 100) {
+        titleEl.textContent = "🏆 滿分通關！專業守護者";
+        descEl.textContent = `全數答對（${score}/${total} 題）！您對不適切照護的界線、正向引導與風險預防都有非常扎實的認知。`;
+      } else if (finalPercentage >= 80) {
+        titleEl.textContent = "👏 表現優秀！觀念很穩固";
+        descEl.textContent = `共答對 ${score}/${total} 題。建議再檢視一下錯題解析，讓日常托育防護做到零死角！`;
+      } else {
+        titleEl.textContent = "💪 繼續加油！安全意識再升級";
+        descEl.textContent = `共答對 ${score}/${total} 題。托育現場許多高風險行為往往源自習慣或一時心急，建議點擊下方重練錯題加深印象。`;
+      }
+
+      const retryWrongBtn = document.getElementById("retry-wrong-btn");
+      const reviewSection = document.getElementById("review-section");
+      const reviewContainer = document.getElementById("review-container");
+
+      if (wrongQuestions.length > 0) {
+        retryWrongBtn.classList.remove("hidden");
+        reviewSection.classList.remove("hidden");
+        reviewContainer.innerHTML = "";
+        wrongQuestions.forEach((wq, i) => {
+          const item = document.createElement("div");
+          item.className = "review-item";
+          item.innerHTML = `
+            <strong>題目：${wq.question}</strong>
+            <div style="color:#2a9d8f; font-weight:600; margin-bottom:4px;">✔ 正確作法：${wq.options[wq.answer]}</div>
+            <div style="color:#495057;">💡 解析：${wq.explanation}</div>
+          `;
+          reviewContainer.appendChild(item);
+        });
+      } else {
+        retryWrongBtn.classList.add("hidden");
+        reviewSection.classList.add("hidden");
+      }
+    }
+  </script>
+</body>
+</html>
 
